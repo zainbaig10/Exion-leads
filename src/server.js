@@ -1,10 +1,20 @@
-import app from "./app.js";
+import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// routes
+import leadRoutes from "./routes/lead.routes.js";
+app.use("/api", leadRoutes);
+
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Lead system running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
