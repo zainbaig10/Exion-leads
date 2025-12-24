@@ -30,8 +30,11 @@ export const receiveLead = async (req, res) => {
     return res.status(200).json({
       msg: "Lead delivered successfully",
     });
-  } catch (error) {
-    console.error("Email error:", error.message);
-    return res.status(500).json({ msg: "Failed to send lead" });
+  } catch (err) {
+    console.error("MAIL ERROR:", err);
+    res.status(500).json({
+      msg: "Failed to send lead",
+      error: err.message,
+    });
   }
 };
