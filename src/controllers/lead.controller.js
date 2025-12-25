@@ -51,16 +51,19 @@ export const receiveLead = async (req, res) => {
     }
 
     const client = clients[clientId];
-
     if (!client) {
       return res.status(404).json({ msg: "Client not found" });
+    }
+
+    if (!process.env.RESEND_FROM_EMAIL) {
+      throw new Error("RESEND_FROM_EMAIL not set");
     }
 
     const formattedText = formatLeadFields(fields);
 
     await resend.emails.send({
-      from: `Website Leads <${process.env.RESEND_FROM_EMAIL}>`, // ✅ STATIC
-      to: [client.email], // ✅ DYNAMIC
+      from: `Al Ramah Website <leads@alramahalsadasi.com>`, // ✅ FIXED
+      to: [client.email],                                  // ✅ ARRAY
       subject: `New ${leadType?.toUpperCase() || "CONTACT"} Lead`,
       text: formattedText,
     });
@@ -68,6 +71,7 @@ export const receiveLead = async (req, res) => {
     return res.status(200).json({
       msg: "Lead delivered successfully",
     });
+
   } catch (err) {
     console.error("MAIL ERROR:", err);
     return res.status(500).json({
