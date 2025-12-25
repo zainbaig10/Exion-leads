@@ -51,6 +51,7 @@ export const receiveLead = async (req, res) => {
     }
 
     const client = clients[clientId];
+
     if (!client) {
       return res.status(404).json({ msg: "Client not found" });
     }
@@ -58,8 +59,8 @@ export const receiveLead = async (req, res) => {
     const formattedText = formatLeadFields(fields);
 
     await resend.emails.send({
-      from: `${client.businessName} Website <${process.env.RESEND_FROM_EMAIL}>`,
-      to: [client.email], // 🔥 FIX IS HERE
+      from: `Website Leads <${process.env.RESEND_FROM_EMAIL}>`, // ✅ STATIC
+      to: [client.email], // ✅ DYNAMIC
       subject: `New ${leadType?.toUpperCase() || "CONTACT"} Lead`,
       text: formattedText,
     });
@@ -75,4 +76,5 @@ export const receiveLead = async (req, res) => {
     });
   }
 };
+
 
